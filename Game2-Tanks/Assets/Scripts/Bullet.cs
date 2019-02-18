@@ -24,13 +24,18 @@ public class Bullet : MonoBehaviour
     {
         if (collision.collider.tag == "Brick" || collision.collider.tag == "Tank")
         {
-            rb.AddExplosionForce(10000, collision.transform.position, 20);
-            Destroy(collision.gameObject);
-            Destroy(this.gameObject);
-            
-            if(collision.collider.tag == "Tank")
+            if(collision.collider.tag == "Tank" && collision.collider.transform != this.transform.parent)
             {
+                Destroy(collision.gameObject);
                 Instantiate(canvas);
+                Destroy(this.gameObject);
+            }
+            else if(collision.collider.transform != this.transform.parent)
+            {
+                Destroy(collision.gameObject);
+                rb.AddExplosionForce(10000, collision.transform.position, 20);
+
+                Destroy(this.gameObject);
             }
         }
     }

@@ -25,16 +25,21 @@ public class Tank : MonoBehaviour
         float fire = Input.GetAxis("Fire_" + tankPlayer);
         transform.Translate(0, 0, vertical * Time.deltaTime * 2.5f);
         transform.Rotate(Vector3.up, horizontal * Time.deltaTime* 75f);
-        
-        
-        if (cannon.transform.rotation.x < .20 && cannonMovement>0 || cannon.transform.rotation.x > -.20 && cannonMovement < 0)
+        float rotationAct = cannon.transform.rotation.eulerAngles.x;
+        if(cannon.transform.rotation.eulerAngles.x > 180)
         {
+            rotationAct = -(360 - rotationAct);
+        }
+        if (rotationAct < 30 && cannonMovement>0 || rotationAct > -20 && cannonMovement < 0)
+        {
+            
             cannon.transform.Rotate(Vector3.right, cannonMovement * Time.deltaTime * 25f);
+            print(cannon.transform.rotation.eulerAngles.x);
         }
 
         if(fire==1 && lastFire == 0)
         {
-            Instantiate(bullet, bulletPosition.position, bulletPosition.rotation);
+            GameObject go = Instantiate(bullet, bulletPosition.position, bulletPosition.rotation, this.transform);
         }
         lastFire = fire;
     }
