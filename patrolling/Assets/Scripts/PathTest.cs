@@ -9,7 +9,7 @@ public class PathTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        LinkedList<Waypoint> path = Pathfinding.Breadthhwise(start, end);
+        List<Waypoint> path = Pathfinding.Breadthhwise(start, end);
         foreach(Waypoint w in path)
         {
             Debug.Log(w.transform.name);
@@ -17,6 +17,13 @@ public class PathTest : MonoBehaviour
 
         Debug.Log("---------------------");
         path = Pathfinding.Depthwise(start, end);
+        foreach (Waypoint w in path)
+        {
+            Debug.Log(w.transform.name);
+        }
+
+        Debug.Log("---------------------");
+        path = Pathfinding.AStar(start, end);
         foreach (Waypoint w in path)
         {
             Debug.Log(w.transform.name);

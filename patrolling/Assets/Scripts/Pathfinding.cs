@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class Pathfinding
 {
-    public static LinkedList<Waypoint> Breadthhwise(Waypoint start, Waypoint end)
+    public static List<Waypoint> Breadthhwise(Waypoint start, Waypoint end)
     {
         Queue<Waypoint> queue = new Queue<Waypoint>();
-        LinkedList<Waypoint> blackList = new LinkedList<Waypoint>();
+        List<Waypoint> blackList = new List<Waypoint>();
 
-        start.history = new LinkedList<Waypoint>();
+        start.history = new List<Waypoint>();
         queue.Enqueue(start);
         while(queue.Count>0)
         {
             Waypoint current = queue.Dequeue();
-            blackList.AddLast(current);
+            blackList.Add(current);
             if (current.Equals(end))
             {
-                current.history.AddLast(current);
+                current.history.Add(current);
                 return current.history;
             }
             foreach(Waypoint child in current.neighbors)
@@ -25,28 +25,28 @@ public class Pathfinding
                 if (!blackList.Contains(child))
                 {
                     queue.Enqueue(child);
-                    child.history = new LinkedList<Waypoint>(current.history);
-                    child.history.AddLast(current);
+                    child.history = new List<Waypoint>(current.history);
+                    child.history.Add(current);
                 }
             }
         }
         return null;
     }
 
-    public static LinkedList<Waypoint> Depthwise(Waypoint start, Waypoint end)
+    public static List<Waypoint> Depthwise(Waypoint start, Waypoint end)
     {
         Stack<Waypoint> stack = new Stack<Waypoint>();
-        LinkedList<Waypoint> blackList = new LinkedList<Waypoint>();
+        List<Waypoint> blackList = new List<Waypoint>();
 
-        start.history = new LinkedList<Waypoint>();
+        start.history = new List<Waypoint>();
         stack.Push(start);
         while (stack.Count > 0)
         {
             Waypoint current = stack.Pop();
-            blackList.AddLast(current);
+            blackList.Add(current);
             if (current.Equals(end))
             {
-                current.history.AddLast(current);
+                current.history.Add(current);
                 return current.history;
             }
             foreach (Waypoint child in current.neighbors)
@@ -54,16 +54,64 @@ public class Pathfinding
                 if (!blackList.Contains(child))
                 {
                     stack.Push(child);
-                    child.history = new LinkedList<Waypoint>(current.history);
-                    child.history.AddLast(current);
+                    child.history = new List<Waypoint>(current.history);
+                    child.history.Add(current);
                 }
             }
         }
         return null;
     }
 
-    public static LinkedList<Waypoint> AStar(Waypoint start, Waypoint end)
+    public static List<Waypoint> AStar(Waypoint start, Waypoint end)
     {
+        List<Waypoint> visited, work;
+        visited = new List<Waypoint>();
+        work = new List<Waypoint>();
+
+        start.history = new List<Waypoint>();
+        visited.Add(start);
+        work.Add(start);
+
+        start.g = 0;
+        start.h = 0;
+
+        while(work.Count > 0)
+        {
+
+            Waypoint actual = work[0];
+            work.Remove(actual);
+            for(int i =1; i< work.Count; i++)
+            {
+                if(work[i].F < actual.F)
+                {
+                    actual = work[i];
+                }
+            }
+
+            foreach(Waypoint currentNeighbor in actual.neighbors)
+            {
+                if (!visited.Contains(currentNeighbor))
+                {
+                    if (currentNeighbor == end)
+                    {
+                        List<Waypoint> result = actual.history;
+                        result.Add(currentNeighbor);
+                        return result;
+                    }
+
+                    currentNeighbor.g = actual.g + Vector3.Distance(actual.transform.position, currentNeighbor.transform.position);
+                    currentNeighbor.h = Vector3.Distance(currentNeighbor.transform.position, end.transform.position);
+
+                    currentNeighbor.history = new List<Waypoint>(actual.history);
+                    currentNeighbor.history.Add(actual);
+
+                    visited.Add(currentNeighbor);
+                    work.Add(currentNeighbor);
+
+                }
+            }
+
+        }
         return null;
     }
 }

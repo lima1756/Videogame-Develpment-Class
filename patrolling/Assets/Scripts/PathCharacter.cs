@@ -9,7 +9,7 @@ public class PathCharacter : MonoBehaviour
     private int current;
     void Start()
     {
-        path = Pathfinding.Breadthhwise(start, end);
+        //path = Pathfinding.Breadthhwise(start, end);
         current = 0;
     }
 

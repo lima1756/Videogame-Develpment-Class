@@ -6,7 +6,16 @@ public class Waypoint : MonoBehaviour
 {
 
     public Waypoint[] neighbors;
-    public LinkedList<Waypoint> history;
+    public List<Waypoint> history;
+    public float g, h;
+
+    public float F
+    {
+        get
+        {
+            return g + h;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
